@@ -1,6 +1,22 @@
-<!-- YOU CAN DELETE EVERYTHING IN THIS PAGE -->
+<script lang="ts">
+	import { supabase } from '$lib/supabase';
 
-<div class="container h-full mx-auto flex justify-center items-center">
+	async function testSupabaseConnection() {
+		const { data, error } = await supabase.from('tests').select('*').limit(1);
+
+		if (error) {
+			console.error('Supabase bağlantı hatası:', error.message);
+			return false;
+		} else {
+			console.log('Supabase bağlantısı başarılı:', data);
+			return true;
+		}
+	}
+
+	testSupabaseConnection();
+</script>
+
+<div class="p-5 container h-full mx-auto flex justify-center items-center">
 	<div class="space-y-5">
 		<h1 class="h1">Let's get cracking bones!</h1>
 		<p>Start by exploring:</p>

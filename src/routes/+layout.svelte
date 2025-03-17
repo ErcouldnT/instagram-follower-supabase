@@ -23,7 +23,7 @@
 </script>
 
 <svelte:head>
-	<title>Futbol</title>
+	<title>Instagram Follower</title>
 </svelte:head>
 
 <slot />

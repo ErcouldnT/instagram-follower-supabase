@@ -13,7 +13,7 @@
 		}
 	}
 
-	testSupabaseConnection();
+	// testSupabaseConnection();
 </script>
 
 <div class="p-5 container h-full mx-auto flex justify-center items-center">

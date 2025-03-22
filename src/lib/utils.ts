@@ -33,3 +33,11 @@ export const cookieString = Object.entries(cookies)
 export function sleep(ms: number) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export const urlGenerator = (user_id: string, nextCode?: string) => {
+	if (nextCode === undefined) {
+		// First url
+		return `https://www.instagram.com/graphql/query/?query_hash=3dec7e2c57367ef3da3d987d89f9dbc8&variables={"id":"${user_id}","include_reel":"true","fetch_mutual":"false","first":"24"}`;
+	}
+	return `https://www.instagram.com/graphql/query/?query_hash=3dec7e2c57367ef3da3d987d89f9dbc8&variables={"id":"${user_id}","include_reel":"true","fetch_mutual":"false","first":"24","after":"${nextCode}"}`;
+};

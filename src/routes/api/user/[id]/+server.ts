@@ -1,7 +1,7 @@
 import axios from "axios";
-import { supabase } from "$lib/supabase";
 import { json } from "@sveltejs/kit";
-import { cookieString, sleep } from "$lib/utils";
+import { supabase } from "$lib/supabase";
+import { cookieString, sleep, urlGenerator } from "$lib/utils";
 import type { Timings, User, UserNode } from "$lib/user.types.js";
 import {
 	DEFAULT_TIME_BETWEEN_SEARCH_CYCLES,
@@ -23,25 +23,16 @@ const timings: Timings = {
 // 	scanningPaused = !scanningPaused;
 // }
 
-const urlGenerator = (nextCode?: string) => {
-	if (nextCode === undefined) {
-		// First url
-		return `https://www.instagram.com/graphql/query/?query_hash=3dec7e2c57367ef3da3d987d89f9dbc8&variables={"id":"${user_id}","include_reel":"true","fetch_mutual":"false","first":"24"}`;
-	}
-	return `https://www.instagram.com/graphql/query/?query_hash=3dec7e2c57367ef3da3d987d89f9dbc8&variables={"id":"${user_id}","include_reel":"true","fetch_mutual":"false","first":"24","after":"${nextCode}"}`;
-};
-
-let user_id = "";
-const results: UserNode[] = [];
-let scrollCycle = 0;
-let hasNext = true;
-let currentFollowedUsersCount = 0;
-let totalFollowedUsersCount = -1;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-let percentage = 0;
-
 export const GET = async ({ params }) => {
-	user_id = params.id;
+	const results: UserNode[] = [];
+	let scrollCycle = 0;
+	let hasNext = true;
+	let currentFollowedUsersCount = 0;
+	let totalFollowedUsersCount = -1;
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	let percentage = 0;
+
+	const user_id = params.id;
 
 	const { data: scanData, error: scanError } = await supabase
 		.from("scans")
@@ -54,7 +45,7 @@ export const GET = async ({ params }) => {
 		return json({ error: "scan_id cannot be null" }, { status: 400 });
 	}
 
-	let url = urlGenerator();
+	let url = urlGenerator(user_id);
 	// const encoder = new TextEncoder();
 
 	// const stream = new ReadableStream({
@@ -93,7 +84,7 @@ export const GET = async ({ params }) => {
 		}
 
 		hasNext = receivedData.page_info.has_next_page;
-		url = urlGenerator(receivedData.page_info.end_cursor);
+		url = urlGenerator(user_id, receivedData.page_info.end_cursor);
 		currentFollowedUsersCount += receivedData.edges.length;
 		percentage = Math.floor((currentFollowedUsersCount / totalFollowedUsersCount) * 100);
 

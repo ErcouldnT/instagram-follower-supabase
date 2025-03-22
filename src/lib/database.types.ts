@@ -32,17 +32,17 @@ export type Database = {
 				Row: {
 					created_at: string;
 					id: number;
-					user_id: number;
+					user_id: string;
 				};
 				Insert: {
 					created_at?: string;
 					id?: number;
-					user_id: number;
+					user_id: string;
 				};
 				Update: {
 					created_at?: string;
 					id?: number;
-					user_id?: number;
+					user_id?: string;
 				};
 				Relationships: [];
 			};
@@ -66,7 +66,7 @@ export type Database = {
 					followed_by_viewer?: boolean | null;
 					follows_viewer?: boolean | null;
 					full_name?: string | null;
-					id: number;
+					id?: number;
 					is_private?: boolean | null;
 					is_verified?: boolean | null;
 					profile_pic_url?: string | null;
